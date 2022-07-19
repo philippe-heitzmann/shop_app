@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/widgets/product_item.dart';
 
-import '../models/product.dart';
+import 'product.dart';
 
-class ProductsOverview extends StatelessWidget {
-  ProductsOverview({Key? key}) : super(key: key);
-
-  final List<Product> loadedProducts = [
+class Products with ChangeNotifier {
+  final List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -41,25 +38,25 @@ class ProductsOverview extends StatelessWidget {
     ),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Philippe\'s Shop'),
-      ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: loadedProducts.length,
-        itemBuilder: (context, index) => ProductItem(
-            id: loadedProducts[index].id,
-            title: loadedProducts[index].title,
-            imageUrl: loadedProducts[index].imageUrl),
-        padding: EdgeInsets.all(10.0),
-      ),
-    );
+  var _showFavorites = false;
+
+  List<Product> get items {
+    if (_showFavorites) {
+      return _items.where((element) => element.isFavorite).toList();
+    }
+    return [..._items];
+  }
+
+  Product findByID(String productId) {
+    return _items.firstWhere((product) => product.id == productId);
+  }
+
+  void updateShowFavorites(bool newVal) {
+    _showFavorites = newVal;
+  }
+
+  void addProduct() {
+    //_items.add(value);
+    notifyListeners();
   }
 }
