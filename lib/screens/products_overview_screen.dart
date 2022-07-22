@@ -21,9 +21,12 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyFavorites = false;
 
+  Future selectCart(BuildContext ctx) {
+    return Navigator.of(ctx).pushNamed('/cart-screen');
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text('My Shop'),
@@ -50,10 +53,15 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             ],
             icon: const Icon(Icons.more_vert),
           ),
-          Badge(
-              value: cart.items.length.toString(),
-              child: IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.shopping_cart)))
+          Consumer<Cart>(
+            builder: (ctx, cart, ch) => Badge(
+              value: cart.itemCount.toString(),
+              child: ch!,
+            ),
+            child: IconButton(
+                onPressed: () => selectCart(context),
+                icon: const Icon(Icons.shopping_cart)),
+          )
         ],
       ),
       body: ProductsGrid(showFavorites: _showOnlyFavorites),
