@@ -76,8 +76,9 @@ class Products with ChangeNotifier {
       // print('Response: ');
       // print(response);
       final extractedData = json.decode(response.body);
+      // print(extractedData);
       if (extractedData != null) {
-        print(extractedData);
+        // print('Length products: ${extractedData.length}');
         final List<Product> loadedProducts = [];
         extractedData.forEach((prodId, prodData) {
           loadedProducts.add(Product(
@@ -111,6 +112,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
+          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
@@ -118,7 +120,9 @@ class Products with ChangeNotifier {
           title: product.title,
           description: product.description,
           imageUrl: product.imageUrl,
-          price: product.price);
+          price: product.price,
+          isFavorite: product.isFavorite);
+      print(newProduct);
       _items.add(newProduct);
       // _items.insert(0, newProduct);
       notifyListeners();
@@ -128,19 +132,27 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String productId, Product newProduct) {
-    // Product oldProduct =
-    //     _items.firstWhere((element) => element.id == productId);
-    // final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    // if (prodIndex >= 0) {
-    //   _items[prodIndex] = newProduct;
-    //   notifyListeners();
-    // } else {
-    //   print('...');
-    // }
-    _items.removeWhere((element) => element.id == productId);
-    _items.add(newProduct);
-    notifyListeners();
+  Future<void> updateProduct(String productId, Product newProduct) async {
+    final prodIndex = _items.indexWhere((prod) => prod.id == productId);
+    if (prodIndex >= 0) {
+      final url = Uri.https('shop-app-24bba-default-rtdb.firebaseio.com',
+          '/products/$productId.json');
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'price': newProduct.price,
+            'imageUrl': newProduct.imageUrl,
+          }));
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    } else {
+      print('...');
+
+      // _items.removeWhere((element) => element.id == productId);
+      // _items.add(newProduct);
+      // notifyListeners();
+    }
   }
 
   void deleteProduct(String productId) {
