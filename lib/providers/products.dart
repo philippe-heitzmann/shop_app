@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'product.dart';
+import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   final List<Product> _items = [
