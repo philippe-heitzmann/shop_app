@@ -44,14 +44,14 @@ class UserProductsScreen extends StatelessWidget {
                       id: productsData.items[index].id,
                       title: productsData.items[index].title,
                       imageUrl: productsData.items[index].imageUrl),
-                  Divider(),
+                  const Divider(),
                 ],
               );
             },
           ),
         ),
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
     );
   }
 }

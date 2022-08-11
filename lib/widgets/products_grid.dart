@@ -35,7 +35,7 @@ class ProductsGrid extends StatelessWidget {
             // imageUrl: products[index].imageUrl
             ),
       ),
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
     );
   }
 }
