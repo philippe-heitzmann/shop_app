@@ -123,12 +123,10 @@ class Products with ChangeNotifier {
           imageUrl: product.imageUrl,
           price: product.price,
           isFavorite: product.isFavorite);
-      print(newProduct);
       _items.add(newProduct);
       // _items.insert(0, newProduct);
       notifyListeners();
     } catch (error) {
-      print(error);
       throw error;
     }
   }
@@ -138,13 +136,21 @@ class Products with ChangeNotifier {
     if (prodIndex >= 0) {
       final url = Uri.https('shop-app-24bba-default-rtdb.firebaseio.com',
           '/products/$productId.json');
-      await http.patch(url,
-          body: json.encode({
-            'title': newProduct.title,
-            'description': newProduct.description,
-            'price': newProduct.price,
-            'imageUrl': newProduct.imageUrl,
-          }));
+      try {
+        final response = await http.patch(url,
+            body: json.encode({
+              'title': newProduct.title,
+              'description': newProduct.description,
+              'price': newProduct.price,
+              'imageUrl': newProduct.imageUrl,
+              'isFavorite': newProduct.isFavorite
+            }));
+        if (response.statusCode >= 400) {
+          throw HttpException(message: 'Could not update product.');
+        }
+      } catch (error) {
+        throw error;
+      }
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {

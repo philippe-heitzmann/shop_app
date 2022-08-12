@@ -24,8 +24,4 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
   }
-
-  Future<void> updateFavorite() async {
-    toggleFavoriteStatus();
-  }
 }

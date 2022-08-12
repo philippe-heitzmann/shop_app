@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+
 import '../providers/product.dart';
+import '../providers/products.dart';
 import '../providers/cart.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
@@ -22,6 +24,7 @@ class _ProductItemState extends State<ProductItem> {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final products = Provider.of<Products>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     return GridTile(
       footer: GridTileBar(
@@ -31,7 +34,11 @@ class _ProductItemState extends State<ProductItem> {
               icon: product.isFavorite
                   ? const Icon(Icons.favorite)
                   : const Icon(Icons.favorite_border),
-              onPressed: product.toggleFavoriteStatus,
+              onPressed: () {
+                product.toggleFavoriteStatus();
+                products.updateProduct(product.id, product);
+              },
+              // onPressed: product.toggleFavoriteStatus,
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
