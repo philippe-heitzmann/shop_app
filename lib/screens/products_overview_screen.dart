@@ -93,9 +93,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           )
         ],
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : ProductsGrid(showFavorites: _showOnlyFavorites),

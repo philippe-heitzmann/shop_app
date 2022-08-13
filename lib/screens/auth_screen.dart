@@ -48,8 +48,8 @@ class AuthScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.deepOrange.shade900,
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                             blurRadius: 8,
                             color: Colors.black26,
                             offset: Offset(0, 2),
@@ -82,9 +82,11 @@ class AuthScreen extends StatelessWidget {
 }
 
 class AuthCard extends StatefulWidget {
-  const AuthCard({
-    required Key key,
-  }) : super(key: key);
+  // const AuthCard({
+  //   required Key key,
+  // }) : super(key: key);
+
+  AuthCard({Key? key}) : super(key: key);
 
   @override
   _AuthCardState createState() => _AuthCardState();
