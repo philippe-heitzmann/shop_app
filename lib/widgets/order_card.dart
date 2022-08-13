@@ -22,21 +22,18 @@ class _OrderCardState extends State<OrderCard> {
     setState(() {
       expand = !expand;
     });
-    if (expand) {
-      print('Expand widget!');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(children: [
         ListTile(
           title: Text('\$${widget.order.amount.toStringAsFixed(2)}'),
           subtitle: Text(
             DateFormat('dd/MM/yyyy hh:mm').format(widget.order.datetime),
-            style: TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey),
           ),
           trailing: IconButton(
             icon: Icon(expand ? Icons.expand_less : Icons.expand_more),
@@ -45,7 +42,7 @@ class _OrderCardState extends State<OrderCard> {
         ),
         if (expand)
           Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               height: min(widget.order.products.length * 20.0 + 100, 100.0),
               child: ListView.builder(
                 itemCount: widget.order.products.length,
@@ -62,7 +59,8 @@ class _OrderCardState extends State<OrderCard> {
                       ),
                       Text(
                         '${widget.order.products[index].quantity} x \$${widget.order.products[index].price}',
-                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 15),
                       )
                     ],
                   );
