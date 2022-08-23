@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+
 import '../providers/product.dart';
+import '../providers/products.dart';
 import '../providers/cart.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
-class ProductItem extends StatelessWidget {
-  // const ProductItem(
-  //     {Key? key, required this.id, required this.title, required this.imageUrl})
-  //     : super(key: key);
+class ProductItem extends StatefulWidget {
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
 
-  // final String id;
-  // final String title;
-  // final String imageUrl;
+class _ProductItemState extends State<ProductItem> {
+  var _editedProduct = Product(
+      id: '',
+      title: '',
+      price: 0.0,
+      description: '',
+      imageUrl: '',
+      isFavorite: false);
 
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final products = Provider.of<Products>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     return GridTile(
       footer: GridTileBar(
@@ -26,7 +34,11 @@ class ProductItem extends StatelessWidget {
               icon: product.isFavorite
                   ? const Icon(Icons.favorite)
                   : const Icon(Icons.favorite_border),
-              onPressed: product.toggleFavoriteStatus,
+              onPressed: () {
+                product.toggleFavoriteStatus();
+                products.updateProduct(product.id, product);
+              },
+              // onPressed: product.toggleFavoriteStatus,
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),

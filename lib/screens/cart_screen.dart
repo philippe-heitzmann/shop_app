@@ -7,10 +7,17 @@ import '../widgets/cart_card.dart';
 import '../providers/orders.dart';
 import '../screens/orders_screen.dart';
 
-class CartScreen extends StatelessWidget {
-  static const routeName = '/cart-screen';
+class OrderButton extends StatefulWidget {
+  const OrderButton({required this.cart});
 
-  const CartScreen({Key? key}) : super(key: key);
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
 
   Future selectOrders(BuildContext ctx) {
     return Navigator.of(ctx).pushNamed(OrdersScreen.routeName);
@@ -18,11 +25,41 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return TextButton orderButton(Cart cart, BuildContext context) {
+    return TextButton(
+      child: _isLoading ? CircularProgressIndicator() : Text('ORDER NOW'),
+      onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).addOrder(
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmount,
+              );
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clearCart();
+              selectOrders(context);
+            },
+    );
+  }
+}
+
+class CartScreen extends StatelessWidget {
+  static const routeName = '/cart-screen';
+
+  const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     final orders = Provider.of<Orders>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Your Shopping Cart')),
-      drawer: MainDrawer(),
+      appBar: AppBar(title: const Text('Your Shopping Cart')),
+      drawer: const MainDrawer(),
       body: Column(
         children: [
           Card(
@@ -36,7 +73,7 @@ class CartScreen extends StatelessWidget {
                     'Total: ',
                     style: TextStyle(fontSize: 20),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Chip(
                     label: Text(
                       '\$${cart.totalAmount.toStringAsFixed(2)}',
@@ -45,20 +82,12 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                          cart.items.values.toList(), cart.totalAmount);
-                      cart.clearCart();
-                      selectOrders(context);
-                    },
-                    child: Text('PLACE ORDER'),
-                  )
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Expanded(
