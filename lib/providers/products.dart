@@ -77,6 +77,7 @@ class Products with ChangeNotifier {
       // print('Response: ');
       // print(response);
       final extractedData = json.decode(response.body);
+      print(extractedData);
       // print(extractedData);
       if (extractedData != null) {
         // print('Length products: ${extractedData.length}');

@@ -14,6 +14,8 @@ enum FilterOptions {
 }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  static const routeName = '/product-overview';
+
   ProductsOverviewScreen({Key? key}) : super(key: key);
 
   @override
@@ -58,7 +60,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Shop'),
+        title: const Text('My Shop'),
         actions: [
           PopupMenuButton(
             onSelected: (FilterOptions selectedvalue) {
