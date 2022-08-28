@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -42,12 +43,10 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  // var _showFavorites = false;
+  final String authToken;
+  Products(this.authToken, this._items);
 
   List<Product> get items {
-    // if (_showFavorites) {
-    //   return _items.where((element) => element.isFavorite).toList();
-    // }
     return [..._items];
   }
 
@@ -59,24 +58,22 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == productId);
   }
 
-  // void showFavoritesOnly() {
-  //   _showFavorites = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll() {
-  //   _showFavorites = false;
-  //   notifyListeners();
-  // }
-
   Future<void> fetchAndSetProducts() async {
-    final url = Uri.https(
-        'shop-app-24bba-default-rtdb.firebaseio.com', '/products.json');
+    // following Q&A Lecture 271
+    final url = Uri.https('shop-app-24bba-default-rtdb.firebaseio.com',
+        '/products.json?auth=$authToken');
+    // final url = Uri.https('shop-app-24bba-default-rtdb.firebaseio.com',
+    //     '/products.json', {'auth': authToken});
     try {
       final response = await http.get(url);
-      // print('Response: ');
-      // print(response);
-      final extractedData = json.decode(response.body);
+      // final response = await http.get(
+      //     Uri.parse(
+      //         'https://shop-app-24bba-default-rtdb.firebaseio.com/products.json'),
+      //     headers: {HttpHeaders.authorizationHeader: 'Basic $authToken'});
+      print('Response: ');
+      print(response);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      print('extracted data: $extractedData');
       // print(extractedData);
       if (extractedData != null) {
         // print('Length products: ${extractedData.length}');
@@ -102,8 +99,6 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     final url = Uri.https(
         'shop-app-24bba-default-rtdb.firebaseio.com', '/products.json');
-    // final url =
-    //     Uri.https('https://flutter-update.firebaseio.com', '/products.json');
     try {
       final response = await http.post(
         url,
@@ -155,10 +150,6 @@ class Products with ChangeNotifier {
       notifyListeners();
     } else {
       print('...');
-
-      // _items.removeWhere((element) => element.id == productId);
-      // _items.add(newProduct);
-      // notifyListeners();
     }
   }
 
